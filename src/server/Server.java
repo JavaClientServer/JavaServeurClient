@@ -5,7 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Created by user on 05/11/2014.
+ * Class Server
+ * Gestion du serveur de nom/surnom
  */
 public class Server {
 
@@ -18,7 +19,7 @@ public class Server {
     private void start() {
 
     }
-    
+
     public static void main(String arg[]) throws IOException {
         ServerSocket serverSocket = null;
         boolean listening = true;
