@@ -1,5 +1,7 @@
 package server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
@@ -13,8 +15,22 @@ public class Server {
         this.socket = socket;
     }
 
-    public static void main(String arg[]) {
-        ServerSocket
+    private void start() {
+
+    }
+    
+    public static void main(String arg[]) throws IOException {
+        ServerSocket serverSocket = null;
+        boolean listening = true;
+        try {
+            serverSocket = new ServerSocket(8080);
+
+        } catch (IOException e) {
+            System.err.println("Impossible d'écouter le port 8080");
+        }
+        while(listening) new Server(serverSocket.accept()).start();
+        serverSocket.close();
+
     }
 
 }
