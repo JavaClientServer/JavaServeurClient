@@ -1,8 +1,6 @@
 package client;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -10,19 +8,49 @@ import java.net.Socket;
  */
 public class Client {
 
-    private PrintStream output;
-    private DataInputStream input;
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
     private Socket client;
 
-    public void send(String msg) {
-        this.output.println(msg);
+    public boolean send(Serializable msg) {
+        try {
+            this.output.writeObject(msg);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void receive(){
+        try{
+            Serializable msg = (Serializable)input.readObject();
+            System.out.print("reçu : "+msg);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
     public Client(String ip, int port){
         try{
             client = new Socket(ip,port);
-            this.output = new PrintStream(client.getOutputStream());
-            this.input = new DataInputStream(client.getInputStream());
+            this.output = new ObjectOutputStream(client.getOutputStream());
+            this.input = new ObjectInputStream(client.getInputStream());
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        try {
+            this.input.close();
+            this.output.close();
+            this.client.close();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -30,9 +58,16 @@ public class Client {
     }
 
     public static void main(String []args) {
-        Client c = new Client("134.59.214.216",6969);
-        c.send("coucou ma biche");
+        Client c = new Client("192.168.0.2",6969);
+        Serializable msg = (Serializable)"coucou ma biche";
+        if(c.send(msg)) {
+            c.receive();
+        }
+        c.close();
+
 
     }
+
+
 
 }
