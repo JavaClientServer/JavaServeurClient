@@ -58,7 +58,7 @@ public class Client {
     }
 
     public static void main(String []args) {
-        Client c = new Client("192.168.0.2",6969);
+        Client c = new Client("localhost",6969);
         Serializable msg = (Serializable)"coucou ma biche";
         if(c.send(msg)) {
             c.receive();
