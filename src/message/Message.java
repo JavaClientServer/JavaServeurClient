@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  Class Message
  * Objet transmit entre le client et le serveur
+ * Classe à compléter
  */
 public class Message implements Serializable {
     private String msg;
