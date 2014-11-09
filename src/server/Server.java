@@ -1,79 +1,109 @@
 package server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import message.Message;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Class Server
  * Gestion du serveur de nom/surnom
  */
-public class Server {
+public class Server implements Observer{
 
-    private ObjectInputStream iStream = null;
-    private ObjectOutputStream oStream = null;
-    private Socket socket = null;
+    private ServerSocket socketServer;
+    private Socket socketClient;
 
-    public Server(String ip, int portDest, int portSrc) throws UnknownHostException {
+    public Server(int portNumber) {
         try {
-            this.socket = new Socket(ip, portDest, InetAddress.getLocalHost(), portSrc);
-            oStream = new ObjectOutputStream(socket.getOutputStream());
-            oStream.flush();
-            iStream = new ObjectInputStream(socket.getInputStream());
+            this.socketServer = new ServerSocket(portNumber);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Server(String ip) throws UnknownHostException {
-        try {
-            new Server(ip, 6969, 6969);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+    public ServerSocket getSocketServer() {
+        return this.socketServer;
     }
 
-    public boolean send(Serializable msg) {
-        try {
-            oStream.writeObject(msg);
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
+    public Socket getSocketClient() {
+        return this.socketClient;
     }
 
-    public boolean isConnected() {
-        return iStream != null & oStream != null;
-}
-
-    public boolean receive() {
-
+    public boolean acceptConnexion() {
         try {
-            Serializable msg = (Serializable) iStream.readObject();
-            System.out.println("J'ai reçu ceci :"+msg);
+            System.out.println("J'attend !");
+            this.socketClient = socketServer.accept();
+            servEcoute newEcoute = new servEcoute(socketClient.getInputStream(),socketClient.getOutputStream());
+            newEcoute.addObserver(this);
+            Thread ecouteur = new Thread(newEcoute);
+            ecouteur.start();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public static void main(String arg[]) throws IOException {
+    @Override
+    public void update(Observable o, Object arg) {
+        servEcoute threadenCours = ((servEcoute) o);
+        try {
+            ((servEcoute) o).getoStream().writeObject(new Message("J'ai reçu"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        Server serv = new Server(arg[0]);
-        while(serv.isConnected()) {
-            if(serv.receive()) {
-                serv.send(new String("J'ai bien reçu copain !"));
+    public class servEcoute extends Observable implements Runnable {
+
+        private ObjectInputStream iStream = null;
+
+        private ObjectOutputStream oStream = null;
+
+        public servEcoute(InputStream inputS, OutputStream outputS) {
+            try {
+                this.iStream = new ObjectInputStream(inputS);
+                this.oStream = new ObjectOutputStream(outputS);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
+        public ObjectOutputStream getoStream() {
+            return oStream;
+        }
+
+        @Override
+        public void run() {
+            Object o;
+            while(true) {
+                try {
+                    o = iStream.readObject();
+                    setChanged();
+                    notifyObservers(o);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
+
+    public static void main(String arg[]) throws IOException {
+            Server serv = new Server(6969);
+            while(true) {
+                serv.acceptConnexion();
+            }
+
+    }
+
 
 }
