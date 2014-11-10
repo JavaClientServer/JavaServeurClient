@@ -31,18 +31,25 @@ public class ListenSend extends Observable implements Runnable {
 
     @Override
     public void run() {
-        Object o;
         System.out.println("Client connecté : "+oStream.toString()+" "+iStream.toString());
         while(true) {
-            try {
-                o = iStream.readObject();
-                setChanged();
-                notifyObservers(o);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            this.receive();
+        }
+    }
+
+    public boolean receive() {
+        Object o;
+        try {
+            o = iStream.readObject();
+            setChanged();
+            notifyObservers(o);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
