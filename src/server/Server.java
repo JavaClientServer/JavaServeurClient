@@ -15,7 +15,6 @@ import java.util.Observer;
 public class Server implements Observer{
 
     private ServerSocket socketServer;
-    private Socket socketClient;
 
     public Server(int portNumber) {
         try {
@@ -30,14 +29,10 @@ public class Server implements Observer{
         return this.socketServer;
     }
 
-    public Socket getSocketClient() {
-        return this.socketClient;
-    }
-
     public boolean acceptConnexion() {
         try {
-            this.socketClient = socketServer.accept();
-            ListenSend clientListenSend = new ListenSend(socketClient.getInputStream(),socketClient.getOutputStream());
+            Socket newClient = socketServer.accept();
+            ListenSend clientListenSend = new ListenSend(newClient);
             clientListenSend.addObserver(this);
             Thread ecouteur = new Thread(clientListenSend);
             ecouteur.start();
@@ -53,6 +48,9 @@ public class Server implements Observer{
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
         ((ListenSend) o).send(new String ("J'ai reçu : "+arg.toString()));
+        if(((Message) arg).getMsg() == "exit") {
+            ((ListenSend) o).close();
+        }
     }
 
     public static void main(String arg[]) throws IOException {
