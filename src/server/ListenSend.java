@@ -44,7 +44,7 @@ public class ListenSend extends Observable implements Runnable {
             while (this.receive()) {
             }
         } catch (IOException e) {
-             e.printStackTrace();
+             this.close();
         }
     }
 
@@ -57,17 +57,17 @@ public class ListenSend extends Observable implements Runnable {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public boolean close() {
         try {
             socketClient.close();
             this.deleteObservers();
+            System.out.println("Client : "+socketClient.toString()+" close");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,12 +77,14 @@ public class ListenSend extends Observable implements Runnable {
 
     public boolean send(Object o) {
         try {
-            Message toto = new Message((String) o);
-            getOStream().writeObject(o);
-            return true;
+            if(! this.socketClient.isClosed()) {
+                Message toto = new Message((String) o);
+                getOStream().writeObject(o);
+                return true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 }

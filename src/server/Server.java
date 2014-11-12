@@ -48,9 +48,6 @@ public class Server implements Observer{
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
         ((ListenSend) o).send(new String ("J'ai reçu : "+arg.toString()));
-        if(((Message) arg).getMsg() == "exit") {
-            ((ListenSend) o).close();
-        }
     }
 
     public static void main(String arg[]) throws IOException {
