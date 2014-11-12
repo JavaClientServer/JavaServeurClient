@@ -40,15 +40,10 @@ public class ListenSend extends Observable implements Runnable {
     @Override
     public void run() {
         System.out.println("Client connecté : " + socketClient.toString());
-        try {
-            while (this.receive()) {
-            }
-        } catch (IOException e) {
-             this.close();
-        }
+            while (this.receive()) {}
     }
 
-    public boolean receive() throws IOException, ClassCastException{
+    public boolean receive() {
         Object o;
         try {
             o = iStream.readObject();
@@ -56,10 +51,8 @@ public class ListenSend extends Observable implements Runnable {
             notifyObservers(o);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        } catch (ClassNotFoundException e) {}
+        this.close();
         return false;
     }
 
@@ -67,7 +60,7 @@ public class ListenSend extends Observable implements Runnable {
         try {
             socketClient.close();
             this.deleteObservers();
-            System.out.println("Client : "+socketClient.toString()+" close");
+            System.out.println("Close : "+socketClient.toString());
             return true;
         } catch (IOException e) {
             e.printStackTrace();
