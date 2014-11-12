@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Classe à compléter
  */
 public class Message implements Serializable {
+    // TODO changer le string en enum
     private String msg;
     private static final long serialVersionUID = 69696969L;
 

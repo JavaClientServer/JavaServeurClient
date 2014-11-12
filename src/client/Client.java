@@ -1,5 +1,7 @@
 package client;
 
+import message.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -25,7 +27,7 @@ public class Client {
     public void receive(){
         try{
             Serializable msg = (Serializable)input.readObject();
-            System.out.print("reçu : "+msg);
+            System.out.println("recu : "+msg);
         }
         catch (IOException e){
             e.printStackTrace();
@@ -58,16 +60,16 @@ public class Client {
     }
 
     public static void main(String []args) {
-        Client c = new Client("localhost",6969);
-        Serializable msg = (Serializable)"coucou ma biche";
-        if(c.send(msg)) {
-            c.receive();
+        while(true){
+            Client c = new Client("83.157.117.225",6969);
+            Message msg = new Message("coucou ma biche");
+            if(c.send(msg)) {
+                c.receive();
+            }
+            if(c.send(new Message("exit"))){
+                c.receive();
+                c.close();
+            }
         }
-        c.close();
-
-
     }
-
-
-
 }
