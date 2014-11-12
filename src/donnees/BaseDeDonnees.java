@@ -44,8 +44,31 @@ public class BaseDeDonnees {
         return false;
     }
 
-    public void addPersonne(Personne p) {
-        listPersonnes.add(p);
+    public ArrayList<String> addSurnom(Personne p, ArrayList<String> surnoms) {
+        ArrayList<String> surnomsExisting = new ArrayList<String>();
+        for(int i=0; i < listPersonnes.size(); i++) {
+            if(!this.addSurnom(p,surnoms.get(i))) surnomsExisting.add(surnoms.get(i));
+        }
+        return surnomsExisting;
     }
+
+    public boolean addPersonne(Personne p) {
+        for(int i=0;i<listPersonnes.size();i++) {
+            if(surnomExisting(p.getSurnom(i))) return false;
+        }
+        listPersonnes.add(p);
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        String result = " ***** Liste de Personnes *****\n";
+        for(int i=0;i<listPersonnes.size();i++) {
+            result+= " ---- Personne n°"+(i+1)+" ----\n"+listPersonnes.toString()+"\n";
+        }
+        return result;
+    }
+
+
 
 }

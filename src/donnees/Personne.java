@@ -55,5 +55,14 @@ public class Personne {
         return true;
     }
 
+    @Override
+    public String toString() {
+        String result = "Nom : "+this.nom+"\nSurnoms : ";
+        for(int i=0;i < surnom.size();i++) {
+            result+= surnom.get(i)+"\n";
+        }
+        return result;
+    }
+
 
 }
