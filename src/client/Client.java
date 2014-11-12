@@ -60,8 +60,8 @@ public class Client {
     }
 
     public static void main(String []args) {
-        while(true){
-            Client c = new Client("83.157.117.225",6969);
+        //while(true){
+            Client c = new Client("134.59.214.216",6969);
             Message msg = new Message("coucou ma biche");
             if(c.send(msg)) {
                 c.receive();
@@ -70,6 +70,6 @@ public class Client {
                 c.receive();
                 c.close();
             }
-        }
+        //}
     }
 }
