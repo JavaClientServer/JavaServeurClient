@@ -1,0 +1,49 @@
+DELMOTTE       SIALA          SINTES         VENIAT
+Jean-Yves      Fares          Nicolas        Tom
+
+Protocole d'application: 
+
+     Flux d'entrée/sortie:
+	>BufferedReader pour lire
+	>PrintWriter pour écrire.
+
+
+     Fonctionnalités :
+     lister/enregistrer/modifier/supprimer
+
+     > Lister
+          LIST [nom]\n
+          ASW [nom] [surnom] [surnom] [surnom] [surnom]\n
+
+          LIST\n
+          ASW [nom] [surnom] [surnom] [surnom] [surnom]\n
+          ASW [nom] [surnom] [surnom] [surnom] [surnom]\n
+          ASW [nom] [surnom] [surnom] [surnom] [surnom]\n
+          ASW END\n
+
+
+     > Enregistrer surnom
+          RECORD [surnom] [nom]\n
+
+     > Modifier surnom
+          EDIT [nom] [ancien] [nouveau]\n
+
+     > Supprimer surnom
+          DELETE [surnom]\n
+
+     > Quitter
+          QUIT\n
+
+     > Accusé de réception
+          À chaque commande on reçoit un accusé de reception de la forme:
+          ACK [nom requete] [Exception]\n
+          remarque : [Exception] n'est présent que si une erreur est survenue
+          > Exception:
+               [Exception]= chaine de caractère
+               {"Nom inexistant","Surnom inexistant","Surnom déjà existant","Nom de commande inconnue","Synthaxe non valide"}
+
+     > Réception de données
+          Pour la commande LIST et LIST [nom] la ou les réponses seront du type :
+          ASW [data]\n
+          [data] sera composé du nom de la personne suivi de son ou ses surnoms
+          remarque : la réception de l'accusé de réception se fera en amont de la réception de données
