@@ -1,5 +1,6 @@
 package server;
 
+import message.Commande;
 import message.Message;
 
 import java.io.*;
@@ -47,7 +48,7 @@ public class Server implements Observer{
     public void update(Observable o, Object arg) {
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
-        ((ListenSend) o).send(new String ("J'ai reçu : "+arg.toString()));
+        ((ListenSend) o).send(new Message(Commande.OK,"j'ai reçu : "+arg.toString()));
     }
 
     public static void main(String arg[]) throws IOException {

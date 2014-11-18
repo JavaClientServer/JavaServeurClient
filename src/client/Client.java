@@ -1,5 +1,6 @@
 package client;
 
+import message.Commande;
 import message.Message;
 
 import java.io.*;
@@ -26,8 +27,8 @@ public class Client {
 
     public void receive(){
         try{
-            Serializable msg = (Serializable)input.readObject();
-            System.out.println("recu : "+msg);
+            Message msg = (Message)input.readObject();
+            System.out.print(msg.getResult());
         }
         catch (IOException e){
             e.printStackTrace();
@@ -59,17 +60,18 @@ public class Client {
         }
     }
 
+    public Message add(String name,String ... nicknames){
+        String[] tmp = new String[nicknames.length+1];
+        for(int i= 0;i<nicknames.length;i++)tmp[i+1]=nicknames[i];
+        tmp[0] = name;
+        return new Message(Commande.ADD,tmp);
+    }
+
     public static void main(String []args) {
-        //while(true){
-            Client c = new Client("134.59.214.216",6969);
-            Message msg = new Message("coucou ma biche");
-            if(c.send(msg)) {
+            Client c = new Client("localhost",6969);
+            System.out.println(c.add("Etienne","toto","tutu"));
+            if(c.send(c.add("Etienne","toto","tutu"))) {
                 c.receive();
             }
-            if(c.send(new Message("exit"))){
-                c.receive();
-                c.close();
-            }
-        //}
     }
 }

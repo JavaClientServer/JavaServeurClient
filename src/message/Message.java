@@ -39,7 +39,7 @@ public class Message implements Serializable {
      */
     public String getResult() {
         if(this.msg == Commande.OK || this.msg == Commande.ERREUR) {
-            return this.args.get(0);
+            return this.msg.toString()+":"+this.args.get(0);
         }
         return "pas de resultat pour ce type de message";
     }
