@@ -76,6 +76,10 @@ public class Client {
         System.out.println(c.add("Etienne","toto","tutu"));
         if(c.send(c.add("Etienne","toto","tutu"))) {
             c.receive();
+        }if(c.send(c.add("Etienne","tato","titu"))) {
+            c.receive();
+        }if(c.send(c.add("Etienne","tito","titu"))) {
+            c.receive();
         }
         if(c.send(c.get())){
             c.receive();
