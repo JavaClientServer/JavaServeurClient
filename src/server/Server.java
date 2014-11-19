@@ -16,10 +16,12 @@ import java.util.Observer;
 public class Server implements Observer{
 
     private ServerSocket socketServer;
+    private Protocoles proto;
 
     public Server(int portNumber) {
         try {
             this.socketServer = new ServerSocket(portNumber);
+            this.proto = new Protocoles();
             System.out.println("Initialisation serveur ok, port :"+portNumber);
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,7 +50,7 @@ public class Server implements Observer{
     public void update(Observable o, Object arg) {
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
-        ((ListenSend) o).send(new Message(Commande.OK,"j'ai reçu : "+arg.toString()));
+        ((ListenSend) o).send(this.proto.commande(arg));
     }
 
     public static void main(String arg[]) throws IOException {

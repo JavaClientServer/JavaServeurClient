@@ -1,6 +1,7 @@
 package message;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +28,14 @@ public class Message implements Serializable {
     public Message(Commande commande,String ... listString) {
         if(commande == null)this.msg = Commande.NONE;
         else this.msg = commande;
-        this.args = new LinkedList<String>();
+        this.args = new ArrayList<String>();
         for(int i=0;i<listString.length;i++){
             args.add(i,listString[i]);
         }
+    }
+
+    public Commande getCommande() {
+        return this.msg;
     }
 
     /**
@@ -42,6 +47,14 @@ public class Message implements Serializable {
             return this.msg.toString()+":"+this.args.get(0);
         }
         return "pas de resultat pour ce type de message";
+    }
+
+    public List<String> getArgs() {
+        return this.args;
+    }
+
+    public String getArgs(int i) {
+        return this.args.get(i);
     }
 
     @Override

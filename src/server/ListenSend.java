@@ -72,8 +72,7 @@ public class ListenSend extends Observable implements Runnable {
     public boolean send(Object o) {
         try {
             if(! this.socketClient.isClosed()) {
-                Message toto = new Message(Commande.NONE,"nothing"/*(String) o*/);
-                getOStream().writeObject(o);
+                getOStream().writeObject((Message)o);
                 return true;
             }
         } catch (IOException e) {
