@@ -34,6 +34,12 @@ public class Message implements Serializable {
         }
     }
 
+    public Message(Commande commande, List<String> msg) {
+        if(commande == null)this.msg = Commande.NONE;
+        else this.msg = commande;
+        args = msg;
+    }
+
     public Commande getCommande() {
         return this.msg;
     }

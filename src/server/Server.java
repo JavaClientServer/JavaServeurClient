@@ -6,6 +6,7 @@ import message.Message;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -50,7 +51,10 @@ public class Server implements Observer{
     public void update(Observable o, Object arg) {
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
-        ((ListenSend) o).send(this.proto.commande(arg));
+        ArrayList<String> msg = Marshalling.translate(arg);
+        if(msg != null) {
+            ((ListenSend) o).send(Marshalling.translate(this.proto.commande(msg)));
+        }
     }
 
     public static void main(String arg[]) throws IOException {

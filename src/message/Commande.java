@@ -10,5 +10,23 @@ public enum Commande {
     ADDS,
     GET,
     OK,
-    ERREUR
+    ERREUR;
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case ADD:
+                return "Add";
+            case ADDS:
+                return "Adds";
+            case GET:
+                return "Get";
+            case OK:
+                return "Ok";
+            case ERREUR:
+                return "Erreur";
+
+        }
+        return "None";
+    }
 }

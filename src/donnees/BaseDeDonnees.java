@@ -29,11 +29,27 @@ public class BaseDeDonnees {
         return this.listPersonnes.get(i);
     }
 
+    public int getListPersonnes(String surnom) {
+        for(int i=0;i<listPersonnes.size();i++) {
+            if(listPersonnes.get(i).isSurnom(surnom)) return i;
+        }
+        return -1;
+    }
+
     public boolean surnomExisting(String surnom) {
         for(int i=0;i<listPersonnes.size();i++) {
-            if(listPersonnes.get(i).isSurnom(surnom)) return false;
+            if(listPersonnes.get(i).isSurnom(surnom)) return true;
         }
-        return true;
+        return false;
+    }
+
+    public boolean surnomsExisting(ArrayList<String> surnoms) {
+        for(int i=0;i<listPersonnes.size();i++) {
+            for (int u = 0; u < surnoms.size(); u++) {
+                if (listPersonnes.get(i).isSurnom(surnoms.get(u))) return true;
+            }
+        }
+        return false;
     }
 
     public boolean addSurnom(Personne p,String surnom) {
@@ -44,18 +60,19 @@ public class BaseDeDonnees {
         return false;
     }
 
-    public ArrayList<String> addSurnom(Personne p, ArrayList<String> surnoms) {
+    public ArrayList<String> addSurnom(int index, ArrayList<String> surnoms) {
         ArrayList<String> surnomsExisting = new ArrayList<String>();
-        for(int i=0; i < listPersonnes.size(); i++) {
-            if(!this.addSurnom(p,surnoms.get(i))) surnomsExisting.add(surnoms.get(i));
+        for(int i=0; i < surnoms.size(); i++) {
+            if(this.surnomExisting(surnoms.get(i))) {surnomsExisting.add(surnoms.get(i));}
+            else {
+                listPersonnes.get(index).addSurnom(surnoms.get(i));
+            }
         }
         return surnomsExisting;
     }
 
     public boolean addPersonne(Personne p) {
-        for(int i=0;i<listPersonnes.size();i++) {
-            if(surnomExisting(p.getSurnom(i))) return false;
-        }
+        if(surnomsExisting(p.getSurnom())) return false;
         listPersonnes.add(p);
         return true;
     }
@@ -64,7 +81,7 @@ public class BaseDeDonnees {
     public String toString() {
         String result = " ***** Liste de Personnes *****\n";
         for(int i=0;i<listPersonnes.size();i++) {
-            result+= " ---- Personne n°"+(i+1)+" ----\n"+listPersonnes.toString()+"\n";
+            result+= " ---- Personne n°"+(i+1)+" ----\n"+listPersonnes.get(i).toString()+"\n";
         }
         return result;
     }
