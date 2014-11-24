@@ -67,11 +67,23 @@ public class Client {
         return new Message(Commande.ADD,tmp);
     }
 
+    public Message get() {
+        return new Message(Commande.GET);
+    }
+
     public static void main(String []args) {
-            Client c = new Client("localhost",6969);
-            System.out.println(c.add("Etienne","toto","tutu"));
-            if(c.send(c.add("Etienne","toto","tutu"))) {
-                c.receive();
-            }
+        Client c = new Client("134.59.214.216",6969);
+        System.out.println(c.add("Etienne","toto","tutu"));
+        if(c.send(c.add("Etienne","toto","tutu"))) {
+            c.receive();
+        }if(c.send(c.add("Etienne","tato","titu"))) {
+            c.receive();
+        }if(c.send(c.add("Etienne","tito","titu"))) {
+            c.receive();
+        }
+        if(c.send(c.get())){
+            c.receive();
+        }
+        c.close();
     }
 }
