@@ -2,10 +2,7 @@ package server;
 
 import donnees.BaseDeDonnees;
 import donnees.Personne;
-import message.Commande;
-import message.Message;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -16,7 +13,9 @@ public class Protocoles {
 
     private BaseDeDonnees bdd;
 
-    public Protocoles() {bdd = new BaseDeDonnees();}
+    public Protocoles() {
+        bdd = new BaseDeDonnees();
+    }
 
     public Protocoles(BaseDeDonnees bdd) {
         this.bdd = bdd;
@@ -37,9 +36,9 @@ public class Protocoles {
         String nom = msg.get(0);
         msg.remove(0);
         Personne nouvelle = new Personne(nom, msg);
-        if(bdd.addPersonne(nouvelle)) {
-            retour.set(0,"OK");
-            retour.set(1,"Opération add effectuée avec succès !\n");
+        if (bdd.addPersonne(nouvelle)) {
+            retour.set(0, "OK");
+            retour.set(1, "Opération add effectuée avec succès !\n");
         }
         return retour;
     }
@@ -48,21 +47,21 @@ public class Protocoles {
         ArrayList<String> retour = new ArrayList<String>();
         String oldSurnom = msg.get(0);
         msg.remove(0);
-        if(!bdd.surnomExisting(oldSurnom)) {
+        if (!bdd.surnomExisting(oldSurnom)) {
             retour.add("ERREUR");
             retour.add("oldSurnom n'existe pas !");
             return retour;
         }
-        ArrayList<String> errorSurnom = this.bdd.addSurnom(bdd.getListPersonnes(oldSurnom),(ArrayList<String>)msg);
+        ArrayList<String> errorSurnom = this.bdd.addSurnom(bdd.getListPersonnes(oldSurnom), (ArrayList<String>) msg);
         retour.add("OK");
-        retour.add("Opération adds effectuée avec succès !\nSurnoms pas ajouté car existant :\n"+errorSurnom.toString());
+        retour.add("Opération adds effectuée avec succès !\nSurnoms pas ajouté car existant :\n" + errorSurnom.toString());
         return retour;
     }
 
     public ArrayList<String> get(ArrayList<String> msg) {
         ArrayList<String> retour = new ArrayList<String>();
         retour.add("OK");
-        if(msg.isEmpty()) {
+        if (msg.isEmpty()) {
             retour.add(bdd.toString());
         }
         return retour;
@@ -72,7 +71,7 @@ public class Protocoles {
         String s = msg.get(0).toLowerCase();
         msg.remove(0);
         try {
-            return (ArrayList<String>) this.getClass().getMethod(s, msg.getClass()).invoke(this,msg);
+            return (ArrayList<String>) this.getClass().getMethod(s, msg.getClass()).invoke(this, msg);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

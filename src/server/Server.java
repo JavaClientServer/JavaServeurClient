@@ -1,9 +1,6 @@
 package server;
 
-import message.Commande;
-import message.Message;
-
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -52,7 +49,7 @@ public class Server implements Observer{
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
         ArrayList<String> msg = Marshalling.translate(arg);
-        if(msg != null) {
+        if (msg != null) {
             ((ListenSend) o).send(Marshalling.translate(this.proto.commande(msg)));
         }
     }

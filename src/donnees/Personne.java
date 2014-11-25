@@ -46,23 +46,23 @@ public class Personne {
     }
 
     public boolean isSurnom(String surnom) {
-        for(int i =0; i<this.getSurnom().size();i++) {
-            if(this.getSurnom(i).equals(surnom)) return true;
+        for (int i = 0; i < this.getSurnom().size(); i++) {
+            if (this.getSurnom(i).equals(surnom)) return true;
         }
         return false;
     }
 
     public boolean addSurnom(String surnom) {
-        if(isSurnom(surnom)) return false;
+        if (isSurnom(surnom)) return false;
         this.surnom.add(surnom);
         return true;
     }
 
     @Override
     public String toString() {
-        String result = this.nom+": ";
-        for(int i=0;i < surnom.size();i++) {
-            result+= surnom.get(i)+" ";
+        String result = this.nom + ": ";
+        for (int i = 0; i < surnom.size(); i++) {
+            result += surnom.get(i) + " ";
         }
         return result;
     }
