@@ -1,8 +1,13 @@
 package client;
 
 
+import message.Message;
+import server.Marshalling;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Etienne on 05/11/2014.
@@ -11,12 +16,15 @@ public class Client {
 
 
     private Socket client;
-
+    private SendReceive sendReceive;
+    private Protocole proto;
 
 
     public Client(String ip, int port){
         try{
-            client = new Socket(ip,port);
+            this.client = new Socket(ip,port);
+            this.sendReceive = new SendReceive(this.client);
+            this.proto = new Protocole();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -25,6 +33,7 @@ public class Client {
 
     public void close() {
         try {
+            this.sendReceive.close();
             this.client.close();
         }
         catch (IOException e){
@@ -32,8 +41,30 @@ public class Client {
         }
     }
 
-    public Socket getSocket() {
-        return this.client;
+    private ArrayList<String> getUserInput(){
+        BufferedReader br = new BufferedReader( new InputStreamReader(System.in));
+        try {
+            String s = br.readLine();
+            ArrayList<String> items = new ArrayList<String>(Arrays.asList(s.split(" ")));
+            return items;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<String>();
+        }
+    }
+
+    public boolean listenUser() {
+        ArrayList<String> cmd = getUserInput();
+        if(cmd.get(0).equals("QUIT")){
+            this.close();
+            return false;
+        }
+        Message msg = Marshalling.translate(cmd);
+        System.out.println(msg);
+        if(this.sendReceive.send(msg)){
+            this.sendReceive.receive();
+        }
+        return true;
     }
 
     public static void main(String []args) {
@@ -41,23 +72,10 @@ public class Client {
         // ip max -> 134.59.214.216:6969
         // ip max::free -> 83.157.117.225
         Client c = new Client("localhost",6969);
-        SendReceive sendReceive = new SendReceive(c.getSocket());
-        Protocole proto = new Protocole();
-        if(sendReceive.send(proto.addNew("Etienne", "toto", "tutu"))) {
-            sendReceive.receive();
-        }if(sendReceive.send(proto.addNew("Maxime", "toto", "tutu"))) {
-            sendReceive.receive();
-        }if(sendReceive.send(proto.addNew("Etienne", "tito", "titu"))) {
-            sendReceive.receive();
-        }
-        if(sendReceive.send(proto.addNickname("tito", "tata", "ttttt", "toto"))){
-            sendReceive.receive();
-        }
-        if(sendReceive.send(proto.get())){
-            sendReceive.receive();
-        }
-        c.close();
+        while(c.listenUser());
     }
+
+
 
 
 }

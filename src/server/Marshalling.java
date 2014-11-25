@@ -26,11 +26,11 @@ public final class Marshalling {
 
     public static Message translate(ArrayList<String> msg) {
         Commande retour;
-        if (msg.get(0) == Commande.ERREUR.toString()) retour = Commande.ERREUR;
-        else if (msg.get(0) == Commande.ADD.toString()) retour = Commande.ADD;
-        else if (msg.get(0) == Commande.ADDS.toString()) retour = Commande.ADDS;
-        else if (msg.get(0) == Commande.GET.toString()) retour = Commande.GET;
-        else if (msg.get(0) == Commande.OK.toString()) retour = Commande.OK;
+        if (msg.get(0).equals(Commande.ERREUR.toString())) retour = Commande.ERREUR;
+        else if (msg.get(0).equals(Commande.ADD.toString())) retour = Commande.ADD;
+        else if (msg.get(0).equals(Commande.ADDS.toString())) retour = Commande.ADDS;
+        else if (msg.get(0).equals(Commande.GET.toString())) retour = Commande.GET;
+        else if (msg.get(0).equals(Commande.OK.toString())) retour = Commande.OK;
         else retour = Commande.ERREUR;
         msg.remove(0);
         return new Message(retour, (List<String>) msg);
