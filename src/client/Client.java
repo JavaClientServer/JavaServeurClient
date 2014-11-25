@@ -72,7 +72,7 @@ public class Client {
     }
 
     public static void main(String []args) {
-        Client c = new Client("134.59.214.216",6969);
+        Client c = new Client("127.0.0.1",6969);
         System.out.println(c.add("Etienne","toto","tutu"));
         if(c.send(c.add("Etienne","toto","tutu"))) {
             c.receive();

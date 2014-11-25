@@ -44,11 +44,9 @@ public class BaseDeDonnees {
     }
 
     public boolean surnomsExisting(ArrayList<String> surnoms) {
-        for(int i=0;i<listPersonnes.size();i++) {
-            for (int u = 0; u < surnoms.size(); u++) {
-                if (listPersonnes.get(i).isSurnom(surnoms.get(u))) return true;
+            for (int i = 0; i < surnoms.size(); i++) {
+                if (surnomExisting(surnoms.get(i))) return true;
             }
-        }
         return false;
     }
 
@@ -72,9 +70,11 @@ public class BaseDeDonnees {
     }
 
     public boolean addPersonne(Personne p) {
-        if(surnomsExisting(p.getSurnom())) return false;
-        listPersonnes.add(p);
-        return true;
+        if(!surnomsExisting(p.getSurnom())) {
+            listPersonnes.add(p);
+            return true;
+        }
+        return false;
     }
 
     @Override

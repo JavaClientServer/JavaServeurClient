@@ -47,7 +47,7 @@ public class Personne {
 
     public boolean isSurnom(String surnom) {
         for(int i =0; i<this.getSurnom().size();i++) {
-            if(this.getSurnom(i) == surnom) return true;
+            if(this.getSurnom(i).equals(surnom)) return true;
         }
         return false;
     }
