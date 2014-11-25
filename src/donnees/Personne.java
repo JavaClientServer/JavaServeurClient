@@ -46,7 +46,10 @@ public class Personne {
     }
 
     public boolean isSurnom(String surnom) {
-        return this.surnom.contains(surnom);
+        for(int i =0; i<this.getSurnom().size();i++) {
+            if(this.getSurnom(i).equals(surnom)) return true;
+        }
+        return false;
     }
 
     public boolean addSurnom(String surnom) {
@@ -57,9 +60,9 @@ public class Personne {
 
     @Override
     public String toString() {
-        String result = "Nom : "+this.nom+"\nSurnoms : ";
+        String result = this.nom+": ";
         for(int i=0;i < surnom.size();i++) {
-            result+= surnom.get(i)+"\n";
+            result+= surnom.get(i)+" ";
         }
         return result;
     }

@@ -10,5 +10,7 @@ public enum Commande {
     ADDS,
     GET,
     OK,
-    ERREUR
+    ERREUR;
+
+
 }

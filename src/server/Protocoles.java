@@ -5,6 +5,8 @@ import donnees.Personne;
 import message.Commande;
 import message.Message;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
@@ -14,9 +16,7 @@ public class Protocoles {
 
     private BaseDeDonnees bdd;
 
-    public Protocoles() {
-        bdd = new BaseDeDonnees();
-    }
+    public Protocoles() {bdd = new BaseDeDonnees();}
 
     public Protocoles(BaseDeDonnees bdd) {
         this.bdd = bdd;
@@ -30,41 +30,57 @@ public class Protocoles {
         this.bdd = bdd;
     }
 
-    public Object add(Message message) {
-        Message retour = new Message(Commande.ERREUR, "Surnom existe déjà");
-        String nom = message.getArgs(0);
-        message.getArgs().remove(0);
-        Personne nouvelle = new Personne(nom, (ArrayList<String>)message.getArgs());
+    public ArrayList<String> add(ArrayList<String> msg) {
+        ArrayList<String> retour = new ArrayList<String>();
+        retour.add("ERREUR");
+        retour.add("Surnom existe déjà !\n");
+        String nom = msg.get(0);
+        msg.remove(0);
+        Personne nouvelle = new Personne(nom, msg);
         if(bdd.addPersonne(nouvelle)) {
-            retour = new Message(Commande.OK, "Opération effectuée avec succès !");
+            retour.set(0,"OK");
+            retour.set(1,"Opération add effectuée avec succès !\n");
         }
-        return (Object) retour;
-    }
-
-    public Object get() {
-        Message retour = new Message(Commande.OK, "**** Liste de surnom ****\n"+ bdd.toString());
         return retour;
     }
 
-    public Object commande(Object messageO) {
-        Message message = ((Message)messageO);
-        switch (message.getCommande()) {
-            case NONE:
-                break;
-            case ADD :
-                return this.add(message);
-            case ADDS:
-                break;
-            case GET:
-                return this.get();
-            case OK:
-                break;
-            case ERREUR:
-                break;
+    public ArrayList<String> adds(ArrayList<String> msg) {
+        ArrayList<String> retour = new ArrayList<String>();
+        String oldSurnom = msg.get(0);
+        msg.remove(0);
+        if(!bdd.surnomExisting(oldSurnom)) {
+            retour.add("ERREUR");
+            retour.add("oldSurnom n'existe pas !");
+            return retour;
         }
-        return new Message(Commande.ERREUR,"Unknown Error");
+        ArrayList<String> errorSurnom = this.bdd.addSurnom(bdd.getListPersonnes(oldSurnom),(ArrayList<String>)msg);
+        retour.add("OK");
+        retour.add("Opération adds effectuée avec succès !\nSurnoms pas ajouté car existant :\n"+errorSurnom.toString());
+        return retour;
     }
 
+    public ArrayList<String> get(ArrayList<String> msg) {
+        ArrayList<String> retour = new ArrayList<String>();
+        retour.add("OK");
+        if(msg.isEmpty()) {
+            retour.add(bdd.toString());
+        }
+        return retour;
+    }
 
+    public ArrayList<String> commande(ArrayList<String> msg) {
+        String s = msg.get(0).toLowerCase();
+        msg.remove(0);
+        try {
+            return (ArrayList<String>) this.getClass().getMethod(s, msg.getClass()).invoke(this,msg);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
