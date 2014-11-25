@@ -60,11 +60,17 @@ public class Client {
         }
     }
 
-    public Message add(String name,String ... nicknames){
+    public Message add_g(Commande cmd,String name,String ... nicknames){
         String[] tmp = new String[nicknames.length+1];
         for(int i= 0;i<nicknames.length;i++)tmp[i+1]=nicknames[i];
         tmp[0] = name;
-        return new Message(Commande.ADD,tmp);
+        return new Message(cmd,tmp);
+    }
+    public Message add(String name,String ... nicknames){
+        return add_g(Commande.ADD,name,nicknames);
+    }
+    public Message add_nickname(String existing,String ... nicknames){
+        return add_g(Commande.ADDS,existing,nicknames);
     }
 
     public Message get() {
@@ -72,13 +78,19 @@ public class Client {
     }
 
     public static void main(String []args) {
-        Client c = new Client("134.59.214.216",6969);
+        // ip nico -> 134.59.215.124:6356
+        // ip max -> 134.59.214.216:6969
+        // ip max::free -> 83.157.117.225
+        Client c = new Client("83.157.117.225",6969);
         System.out.println(c.add("Etienne","toto","tutu"));
         if(c.send(c.add("Etienne","toto","tutu"))) {
             c.receive();
-        }if(c.send(c.add("Etienne","tato","titu"))) {
+        }if(c.send(c.add("Maxime","toto","tutu"))) {
             c.receive();
         }if(c.send(c.add("Etienne","tito","titu"))) {
+            c.receive();
+        }
+        if(c.send(c.add_nickname("tito","tata","ttttt","toto"))){
             c.receive();
         }
         if(c.send(c.get())){
