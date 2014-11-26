@@ -13,13 +13,13 @@ public class Client {
     private Socket client;
 
     public void send(String msg) {
-        this.output.println(msg);
+        this.output.println(msg); output.flush();
     }
 
     public void receive(){
-        Serializable msg = null;
+        Serializable msg = "";
         try {
-            msg = input.read();
+            msg = input.readLine();
             System.out.println("recu : "+msg);
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,9 +61,9 @@ public class Client {
 
     public static void main(String []args) {
         //while(true){
-        Client c = new Client("134.59.214.216",6969);
+        Client c = new Client("134.59.214.67",2014);
         c.lister();
-        c.record("Françis Longduzoubbogrodar", "FLD");
+        c.record("Françis_Longduzoubbogrodar", "FLD");
         c.close();
         //}
     }
