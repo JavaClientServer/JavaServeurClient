@@ -49,7 +49,7 @@ public class Server implements Observer{
         ListenSend client = ((ListenSend) o);
         System.out.println("Reception de : "+arg.toString());
         ArrayList<String> msg = Marshalling.translate(arg);
-        if (msg != null) {
+        if (!msg.equals(null)) {
             ((ListenSend) o).send(Marshalling.translate(this.proto.commande(msg)));
         }
     }
