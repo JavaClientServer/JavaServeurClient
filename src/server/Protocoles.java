@@ -80,12 +80,13 @@ public class Protocoles {
         try {
             return (ArrayList<String>) this.getClass().getMethod(s, msg.getClass()).invoke(this, msg);
         } catch (IllegalAccessException e) {
+            return commandeError();
         } catch (InvocationTargetException e) {
+            return commandeError();
         } catch (NoSuchMethodException e) {
-        }
-        finally {
             return commandeError();
         }
+
     }
 
 }
