@@ -2,9 +2,10 @@ package client;
 
 
 import message.Message;
-import server.Marshalling;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +61,6 @@ public class Client {
             return false;
         }
         Message msg = Marshalling.translate(cmd);
-        System.out.println(msg);
         if(this.sendReceive.send(msg)){
             this.sendReceive.receive();
         }
@@ -72,6 +72,8 @@ public class Client {
         // ip max -> 134.59.214.216:6969
         // ip max::free -> 83.157.117.225
         Client c = new Client("localhost",6969);
+        System.out.println("Client connecté");
+        System.out.println("Tapez une commande");
         while(c.listenUser());
     }
 
