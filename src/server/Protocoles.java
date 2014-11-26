@@ -67,19 +67,25 @@ public class Protocoles {
         return retour;
     }
 
+    public ArrayList<String> commandeError() {
+        ArrayList<String> retour = new ArrayList<String>();
+        retour.add("ERREUR");
+        retour.add("Commande introuvable !\n");
+        return retour;
+    }
+
     public ArrayList<String> commande(ArrayList<String> msg) {
         String s = msg.get(0).toLowerCase();
         msg.remove(0);
         try {
             return (ArrayList<String>) this.getClass().getMethod(s, msg.getClass()).invoke(this, msg);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
         }
-        return null;
+        finally {
+            return commandeError();
+        }
     }
 
 }
