@@ -4,12 +4,13 @@ import donnees.BaseDeDonnees;
 import donnees.Personne;
 
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
  * Created by user on 12/11/2014.
  */
-public class Protocoles {
+public class Protocoles implements ProtocolesInterface{
 
     private BaseDeDonnees bdd;
 
@@ -21,15 +22,15 @@ public class Protocoles {
         this.bdd = bdd;
     }
 
-    public BaseDeDonnees getBdd() {
+    public BaseDeDonnees getBdd() throws RemoteException {
         return bdd;
     }
 
-    public void setBdd(BaseDeDonnees bdd) {
+    public void setBdd(BaseDeDonnees bdd) throws RemoteException {
         this.bdd = bdd;
     }
 
-    public ArrayList<String> add(ArrayList<String> msg) {
+    public ArrayList<String> add(ArrayList<String> msg) throws RemoteException {
         ArrayList<String> retour = new ArrayList<String>();
         retour.add("ERREUR");
         retour.add("Surnom existe déjà !\n");
@@ -43,7 +44,7 @@ public class Protocoles {
         return retour;
     }
 
-    public ArrayList<String> adds(ArrayList<String> msg) {
+    public ArrayList<String> adds(ArrayList<String> msg) throws RemoteException {
         ArrayList<String> retour = new ArrayList<String>();
         String oldSurnom = msg.get(0);
         msg.remove(0);
@@ -58,7 +59,7 @@ public class Protocoles {
         return retour;
     }
 
-    public ArrayList<String> get(ArrayList<String> msg) {
+    public ArrayList<String> get(ArrayList<String> msg) throws RemoteException {
         ArrayList<String> retour = new ArrayList<String>();
         retour.add("OK");
         if (msg.isEmpty()) {
@@ -67,14 +68,14 @@ public class Protocoles {
         return retour;
     }
 
-    public ArrayList<String> commandeError() {
+    public ArrayList<String> commandeError() throws RemoteException {
         ArrayList<String> retour = new ArrayList<String>();
         retour.add("ERREUR");
         retour.add("Commande introuvable !\n");
         return retour;
     }
 
-    public ArrayList<String> commande(ArrayList<String> msg) {
+    public ArrayList<String> commande(ArrayList<String> msg) throws RemoteException {
         String s = msg.get(0).toLowerCase();
         msg.remove(0);
         try {
